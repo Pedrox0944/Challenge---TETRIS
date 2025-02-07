@@ -117,6 +117,7 @@ void register_part(List *list_parts)
    
    do 
    {
+       system("clear");
        puts("Please select part you want");
        printf("[1] - Part T\n[2] - Part S1\n[3] - Part S2\n[4] - Part I\n[5] - Part L1\n[6] - Part L2\n[7] - Part Q\nyour choice: \n");
        scanf("%d", &order_input);
@@ -130,6 +131,7 @@ void register_part(List *list_parts)
    
    do 
    {
+       system("clear");
        printf("Options color: Red, Yellow, Pink, Purple, Blue, Black, White, Green\n");
        printf("Enter color: ");
        scanf("%s", color);
@@ -148,7 +150,8 @@ void register_part(List *list_parts)
        break;
    } while (1);
    
-   do {
+   do 
+   {
        printf("Enter part border(y or n): ");
        scanf(" %c", &part_border);
        if (part_border != 'y' && part_border != 'n') 
@@ -156,7 +159,7 @@ void register_part(List *list_parts)
            system("clear");
            puts("Error! Your choice is invalid! Please type again between y or n: ");
         }
-   }while (part_border != 'y' && part_border != 'n');
+   } while (part_border != 'y' && part_border != 'n');
    
    part *new_part = create_part((Order_part)order_input,color,part_border);
    if (new_part == NULL) 
@@ -277,7 +280,6 @@ void rearrange_list(List *list)
             }
             insert_part_list(assistant, swap, list);
         }
-
         assistant = next_part;
     }
     list_all(list);
