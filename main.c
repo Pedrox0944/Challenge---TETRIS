@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "functions.c"
 
 int main()
@@ -27,6 +28,8 @@ int main()
                 rearrange_list(list);
                 break;
             case 4:
+                system("clear");
+                puts("Thank you for your precious time to test this little program from a programmer who gets caught up in life every day! hahaha.");
                 break;
             default:
                 puts("Error! Your choice is invalid!");

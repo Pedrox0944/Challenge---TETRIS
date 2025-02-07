@@ -8,20 +8,6 @@
 
 const char *primary_color[] = {"red", "black", "blue", "purple", "white", "green", "pink", "yelow"};
 
-int valid_color(char color[MAX_PART_COLOR_SIZE])
-{
-    for (int i = 0; color[i] != '\0' ; i++) {
-        color[i] = tolower(color[i]);
-    }
-    
-    for (int i = 0; primary_color[i] != NULL; i++) {
-        if (strcmp(color, primary_color[i]) == 0) {
-            return 1;
-        }
-    }
-    return 0;
-}
-
 typedef enum Order_part
 {
     T = 1,
@@ -107,6 +93,20 @@ part *create_part(enum Order_part order_part, char color[MAX_PART_COLOR_SIZE], c
     new->next = NULL;
     new->previous = NULL;
     return new;
+}
+
+int valid_color(char color[MAX_PART_COLOR_SIZE])
+{
+    for (int i = 0; color[i] != '\0' ; i++) {
+        color[i] = tolower(color[i]);
+    }
+    
+    for (int i = 0; primary_color[i] != NULL; i++) {
+        if (strcmp(color, primary_color[i]) == 0) {
+            return 1;
+        }
+    }
+    return 0;
 }
 
 void register_part(List *list_parts)
