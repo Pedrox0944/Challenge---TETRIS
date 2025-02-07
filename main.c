@@ -10,13 +10,13 @@ typedef enum Order_part
     T = 1,
     S1 = 2,
     S2 = 3,
-    UI = 4, // O C entende o I como uma constante da lib complex, por isso fiz esse UI
+    UI = 4, // C understands I as a constant in the complex lib, that's why I made this UI
     L1 = 5,
     L2 = 6,
     Q = 7
 }Order_part;
 
-const char *part_name(Order_part order_part)
+const char *part_type(Order_part order_part)
 {
     switch (order_part)
     {
@@ -97,8 +97,8 @@ void register_part(List *list_parts)
    char part_edge;
    int order_input;
    
-   puts("Plesa select part you want");
-   printf("[1] - Peça T\n[2] - Peça S1\n[3] - Peça S2\n[4] - Peça I\n[5] - Peça L1\n[6] - Peça L2\n[7] - Peça Q\nyour choice: \n");
+   puts("Please select part you want");
+   printf("[1] - Part T\n[2] - Part S1\n[3] - Part S2\n[4] - Part I\n[5] - Part L1\n[6] - Part L2\n[7] - Part Q\nyour choice: \n");
    scanf("%d", &order_input);
    
    if (order_input < 0 || order_input > 7) 
@@ -141,7 +141,7 @@ void list_all(List *list)
     
     part *assistant = list->start;
     while(assistant != NULL) {
-        printf("Part: %s - Color %s - %s\n", part_name(assistant->order_part), assistant->color, edge_description(assistant->part_edge));
+        printf("Part: %s - Color %s - %s\n", part_type(assistant->order_part), assistant->color, edge_description(assistant->part_edge));
         assistant = assistant->next;
     }
     sleep(2);
@@ -216,7 +216,6 @@ void rearrange_list(List *list)
     while (assistant != NULL) 
     {
         part *next_part = assistant->next;
-
         if (assistant->previous != NULL && assistant->order_part < assistant->previous->order_part) 
         {
             part *swap = assistant->previous;
@@ -254,7 +253,6 @@ int main()
         switch (choice)
         {
             case 1:
-                puts("please select the part you want");
                 register_part(list);
                 break;
             case 2:
