@@ -1,4 +1,5 @@
 #include <ctype.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,7 +7,7 @@
 
 #define MAX_PART_COLOR_SIZE 15
 
-const char *primary_color[] = {"red", "black", "blue", "purple", "white", "green", "pink", "yelow"};
+const char *primary_color[] = {"red", "black", "blue", "purple", "white", "green", "pink", "yellow"};
 
 typedef enum Order_part
 {
@@ -17,7 +18,7 @@ typedef enum Order_part
     L1 = 5,
     L2 = 6,
     Q = 7
-}Order_part;
+} Order_part;
 
 const char *part_type(Order_part order_part)
 {
@@ -101,8 +102,10 @@ int valid_color(char color[MAX_PART_COLOR_SIZE])
         color[i] = tolower(color[i]);
     }
     
-    for (int i = 0; primary_color[i] != NULL; i++) {
-        if (strcmp(color, primary_color[i]) == 0) {
+    for (int i = 0; primary_color[i] != NULL; i++) 
+    {
+        if (strcmp(color, primary_color[i]) == 0) 
+        {
             return 1;
         }
     }
@@ -152,7 +155,7 @@ void register_part(List *list_parts)
    
    do 
    {
-       printf("Enter part border(y or n): ");
+       printf("Enter part border (y or n): ");
        scanf(" %c", &part_border);
        if (part_border != 'y' && part_border != 'n') 
         {
@@ -162,10 +165,7 @@ void register_part(List *list_parts)
    } while (part_border != 'y' && part_border != 'n');
    
    part *new_part = create_part((Order_part)order_input,color,part_border);
-   if (new_part == NULL) 
-    {
-       return;
-    }
+   if (new_part == NULL) return;
    
    if (list_parts->start == NULL) 
     {
@@ -260,8 +260,9 @@ void insert_part_list(part *assistant, part *swap, List *list)
 
 void rearrange_list(List *list)
 {
-    if (list->start == NULL || list->start->next == NULL) 
+    if (list->start == NULL) 
     {
+        puts("List empty!");
         return;
     }
     
