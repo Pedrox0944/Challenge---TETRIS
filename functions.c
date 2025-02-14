@@ -12,12 +12,12 @@ const char *primary_color[] = {"red", "black", "blue", "purple", "white", "green
 typedef enum Order_part
 {
     T = 1,
-    S1 = 2,
-    S2 = 3,
-    UI = 4, // C understands I as a constant in the complex lib, that's why I made this UI
-    L1 = 5,
-    L2 = 6,
-    Q = 7
+    S1,
+    S2,
+    UI, // C understands I asassistant_free  constant in the complex lib, that's why I made this UI
+    L1,
+    L2,
+    Q 
 } Order_part;
 
 const char *part_type(Order_part order_part)
@@ -117,20 +117,37 @@ void register_part(List *list_parts)
    char color[MAX_PART_COLOR_SIZE];
    char part_border;
    int order_input;
+   float order_input_temp;
    
    do 
    {
        system("clear");
        puts("Please select part you want");
-       printf("[1] - Part T\n[2] - Part S1\n[3] - Part S2\n[4] - Part I\n[5] - Part L1\n[6] - Part L2\n[7] - Part Q\nyour choice: \n");
-       scanf("%d", &order_input);
+       printf("[1] - Part T\n[2] - Part S1\n[3] - Part S2\n[4] - Part I\n[5] - Part L1\n[6] - Part L2\n[7] - Part Q\nyour choice: ");
+    
+       if(scanf("%f", &order_input_temp) != 1){
+        puts("Error! Please type a int number");
+        while(getchar() != '\n');
+        continue;
+       }
+       else{
+        while(getchar() != '\n');
+       }
+
+       if(order_input_temp == (int)order_input_temp){
+        order_input = order_input_temp;
+       }
+       else {
+        puts("Please type a int number!");
+        continue;
+       }
        
        if (order_input < 1 || order_input > 7) 
         {
             system("clear");
             puts("Error! Your choice is invalid!");
         }
-   } while (order_input < 1 || order_input > 7);
+   } while ((order_input < 1 || order_input > 7) || (order_input_temp != (int)order_input_temp));
    
    do 
    {
@@ -284,5 +301,18 @@ void rearrange_list(List *list)
         assistant = next_part;
     }
     list_all(list);
+}
+
+void free_memory(List *list){
+    part *assistant_free = list->start;
+    part *next;
+
+    if (assistant_free != NULL)
+    {
+        next = assistant_free->next;
+        free(assistant_free);
+        assistant_free = next;
+    }
+    free(list);
 }
 

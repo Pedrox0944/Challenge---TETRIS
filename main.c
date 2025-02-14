@@ -45,6 +45,7 @@ int main()
                 break;
             case 4:
                 system("clear");
+                free_memory(list);
                 puts("Thank you for your precious time to test this little program from a programmer who gets caught up in life every day! hahaha.");
                 return false;
                 break;
