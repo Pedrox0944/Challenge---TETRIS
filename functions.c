@@ -14,7 +14,7 @@ typedef enum Order_part
     T = 1,
     S1,
     S2,
-    UI, // C understands I asassistant_free  constant in the complex lib, that's why I made this UI
+    UI, // C understands I asassistant_free a constant in the complex lib, that's why I made this UI
     L1,
     L2,
     Q 
