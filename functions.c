@@ -9,17 +9,19 @@
 
 const char *primary_color[] = {"red", "black", "blue", "purple", "white", "green", "pink", "yellow"};
 
+// Preferi usar enumerações para linkar com os tipos da peça
 typedef enum Order_part
 {
     T = 1,
     S1,
     S2,
-    UI, // C understands I asassistant_free a constant in the complex lib, that's why I made this UI
+    UI, // Quando coloquei a peça I aqui o C ficou importanto a biblioteca complex e apontando que esse I é uma constante, por isso usei o UI, não impacta em nada no codigo
     L1,
     L2,
     Q 
 } Order_part;
 
+// Criei essa ponteiro para retornar para a peça seu tipo com seu formato em char
 const char *part_type(Order_part order_part)
 {
     switch (order_part)
@@ -43,6 +45,7 @@ const char *part_type(Order_part order_part)
     }
 }
 
+// Mesma lógica usada em cima
 const char *border_description(char part_border)
 {
     switch (part_border) 
@@ -56,17 +59,19 @@ const char *border_description(char part_border)
     }
 }
 
+// Estrutura da peça
 typedef struct Part
 {
     enum Order_part order_part;
     char color[MAX_PART_COLOR_SIZE];
     char part_border;
-    int weight;
-    int size_part;
+    float weight;
+    float size_part;
     struct Part *next;
     struct Part *previous;
 }part;
 
+// Estrutura da lista onde vou guardar as peças
 typedef struct List
 {
   part *start;  
@@ -74,6 +79,7 @@ typedef struct List
   int size_list;
 } List;
 
+// Ponteiro que carrega a função de criar a lista
 List *create_list()
 {
     List *new = malloc(sizeof(List));
@@ -83,19 +89,30 @@ List *create_list()
     return new;
 }
 
-part *create_part(enum Order_part order_part, char color[MAX_PART_COLOR_SIZE], char part_border)
+// Ponteiro que carrega a função de criar peça
+part *create_part(enum Order_part order_part, char color[MAX_PART_COLOR_SIZE], char part_border, float weight, float size_part)
 {
     part *new = malloc(sizeof(part));
     new->order_part = order_part;
     strcpy(new->color, color);
     new->part_border = part_border;
-    new->weight = 0;
-    new->size_part = 0;
+    new->weight = weight;
+    new->size_part = size_part;
     new->next = NULL;
     new->previous = NULL;
     return new;
 }
 
+// Função pra limpar o terminal
+void clear_screen(){
+    #ifdef _WIN32
+        system("cls");
+    #else
+        system("clear");
+    #endif
+}
+
+// Função de validação da cor, checa se a cor digitada pelo o user está presente na array de cores
 int valid_color(char color[MAX_PART_COLOR_SIZE])
 {
     for (int i = 0; color[i] != '\0' ; i++) {
@@ -109,19 +126,22 @@ int valid_color(char color[MAX_PART_COLOR_SIZE])
             return 1;
         }
     }
+    
     return 0;
 }
 
+// Função que registra todos os atributos da peça na lista
 void register_part(List *list_parts)
 {
    char color[MAX_PART_COLOR_SIZE];
    char part_border;
    int order_input;
    float order_input_temp;
+   float weight, size_part;
    
    do 
    {
-       system("clear");
+       clear_screen();
        puts("Please select part you want");
        printf("[1] - Part T\n[2] - Part S1\n[3] - Part S2\n[4] - Part I\n[5] - Part L1\n[6] - Part L2\n[7] - Part Q\nyour choice: ");
     
@@ -144,7 +164,7 @@ void register_part(List *list_parts)
        
        if (order_input < 1 || order_input > 7) 
         {
-            system("clear");
+            clear_screen();
             puts("Error! Your choice is invalid!");
         }
    } while ((order_input < 1 || order_input > 7) || (order_input_temp != (int)order_input_temp));
@@ -165,6 +185,7 @@ void register_part(List *list_parts)
        if (!valid_color(color)) 
         {
             puts("Error! Invalid color. Plese type a valid color: ");
+            sleep(1);
             continue;
         }
        break;
@@ -176,12 +197,34 @@ void register_part(List *list_parts)
        scanf(" %c", &part_border);
        if (part_border != 'y' && part_border != 'n') 
         {
-           system("clear");
+           clear_screen();
            puts("Error! Your choice is invalid! Please type again between y or n: ");
         }
    } while (part_border != 'y' && part_border != 'n');
    
-   part *new_part = create_part((Order_part)order_input,color,part_border);
+   do {
+       printf("Please enter the weight of the part: ");
+       if (scanf("%f", &weight) != 1) {
+           clear_screen();
+           puts("Error! Your type a char or string. Please, type a number");
+           while(getchar() != '\n' && getchar() != EOF);
+           continue;
+       }
+       break;
+   }while (1);
+   
+   do {
+       printf("Please enter the size of the part: ");
+       if (scanf("%f", &size_part) != 1) {
+           clear_screen();
+           puts("Error! Your type a char or string. Please, type a number");
+           while(getchar() != '\n' && getchar() != EOF);
+           continue;
+       }
+       break;
+   }while (1);
+   
+   part *new_part = create_part((Order_part)order_input, color, part_border, weight, size_part);
    if (new_part == NULL) return;
    
    if (list_parts->start == NULL) 
@@ -198,31 +241,37 @@ void register_part(List *list_parts)
    list_parts->size_list++;
    puts("Your part registered succesfully!");
    sleep(1);
-   system("clear");
+   clear_screen();
 }
 
+// Função de listar todas as peças
 void list_all(List *list)
 {
-    system("clear");
+    clear_screen();
     if (list->start == NULL) 
     {
-        printf("List is empty");
+        printf("List is empty!\n");
+        sleep(1);
+        clear_screen();
     }
-    
-    part *assistant = list->start;
-    while(assistant != NULL) {
-        printf("Part: %s - Color %s - %s\n", part_type(assistant->order_part), assistant->color, border_description(assistant->part_border));
-        assistant = assistant->next;
+    else{
+        part *assistant = list->start;
+        while(assistant != NULL) {
+            printf("Part: %s - Color %s - %s\n", part_type(assistant->order_part), assistant->color, border_description(assistant->part_border));
+            assistant = assistant->next;
+        }
+        sleep(1);
     }
-    sleep(2);
 }
 
+// Função de desconectar o nó da lista
 void disconnect_part_list(part *part, List *list)
 {
     if (part == list->start)
     { 
         list->start = part->next;
     }
+    
     if (part == list->end) 
     {
         list->end = part->previous;
@@ -244,7 +293,7 @@ void disconnect_part_list(part *part, List *list)
     }
 }
 
-
+// Função de inserir o nó anteriormente desconectado da lista
 void insert_part_list(part *assistant, part *swap, List *list)
 {
     if (swap == NULL) 
@@ -275,6 +324,7 @@ void insert_part_list(part *assistant, part *swap, List *list)
     }
 }
 
+// Função de reorganizar a lista, preferi usar o INSERTION SORT
 void rearrange_list(List *list)
 {
     if (list->start == NULL) 
@@ -303,10 +353,11 @@ void rearrange_list(List *list)
     list_all(list);
 }
 
+// Função de desalocar memória, desaloca todos os nós e por fim a lista.
 void free_memory(List *list){
     part *assistant_free = list->start;
     part *next;
-
+    
     if (assistant_free != NULL)
     {
         next = assistant_free->next;
